@@ -5,7 +5,7 @@ import '../views/company_listing_screen.dart';
 import '../views/login_screen.dart';
 
 class AuthController extends GetxController {
-  var isLoggedIn = false.obs;
+  final isLoggedIn = false.obs;
 
   @override
   void onInit() {

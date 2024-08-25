@@ -9,9 +9,13 @@ class CompanyListingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Obx(() {
-        return CustomScrollView(
+    return Obx(() {
+      if (!companyController.isDataLoaded.value) {
+        return Container(color: Colors.white, child: const Center(child: CircularProgressIndicator()));
+      }
+
+      return Scaffold(
+        body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               expandedHeight: 150.0,
@@ -24,24 +28,24 @@ class CompanyListingScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 25),
                   child: InkWell(
                     onTap: (){
-                      showSearch(context: context, delegate: CompanySearchDelegate());
+                      showSearch(context: context, delegate: CompanySearchDelegate(companyController: companyController));
                     },
                     borderRadius: BorderRadius.circular(15),
                     child: Ink(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade200,
-                              offset: const Offset(0, 1),
-                              blurRadius: 15,
-                              spreadRadius: 0
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: const Icon(Icons.search, color: Colors.black,)
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.shade200,
+                                offset: const Offset(0, 1),
+                                blurRadius: 15,
+                                spreadRadius: 0
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: const Icon(Icons.search, color: Colors.black,)
                     ),
                   ),
                 ),
@@ -63,20 +67,20 @@ class CompanyListingScreen extends StatelessWidget {
                     isApplied: companyController.isJobApplied(company.id),
                     onApply: () => companyController.applyForJob(company.id),
                   );
-                },
-                childCount: companyController.companyList.length,
+                }, childCount: companyController.companyList.length,
               ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }
 
 
 class CompanySearchDelegate extends SearchDelegate {
-  final CompanyController companyController = Get.put(CompanyController());
+  final CompanyController companyController;
+  CompanySearchDelegate({required this.companyController});
 
   @override
   List<Widget> buildActions(BuildContext context) {
